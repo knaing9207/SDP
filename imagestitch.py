@@ -29,5 +29,6 @@ else:
   
 # final output 
 cv2.imshow('final result',output) 
+cv2.imwrite("stitched_image.jpg", output)
   
 cv2.waitKey(0)

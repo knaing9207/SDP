@@ -48,6 +48,3 @@ class pillinfo:
                 ", Expiration: " + str(self.expiration) + \
                 ", Direction: " + str(self.direction)
     
-pill1 = pillinfo(1)
-pill1.setname('Tylenol')
-print(pill1)
