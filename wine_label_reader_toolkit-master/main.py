@@ -7,7 +7,7 @@ from wineReader.labelVision import *
 # --train
 # --read
 
-f = open('wine_label_reader_toolkit-master\Config.json')
+f = open('wine_label_reader_toolkit-master/Config.json')
 Config = json.load(f)
 
 # job = sys.argv

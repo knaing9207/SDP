@@ -6,8 +6,6 @@ import pytesseract
 import PIL.Image
 from math import ceil
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
 # Copyright notice: a part of the code is pulled from https://github.com/Nepherhotep/unwrap_labels with the author autorisation.
 
 BLACK_COLOR = (0, 0, 0)

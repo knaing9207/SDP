@@ -6,7 +6,7 @@
     "to_read_path" : "wine_label_reader_toolkit-master/img/to_read/",
     "results_path" : "wine_label_reader_toolkit-master/img/results/",
     "tensorboards_path" : "wine_label_reader_toolkit-master/tensorboard/logs/fit/",
-    "model_to_predict_path" : "models/unet-20231208-215508.hdf5",
+    "model_to_predict_path" : "models/unet.h5",
     "contraction_1_dropout" : 0.05,
     "contraction_2_dropout" : 0.1,
     "contraction_3_dropout" : 0.15,
