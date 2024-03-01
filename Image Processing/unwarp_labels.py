@@ -396,7 +396,7 @@ if __name__ == '__main__':
     for point in shape['shape']:
         points.append([point['x'], point['y']])
 
-    imcv = cv2.imread('img3.jpg', cv2.IMREAD_UNCHANGED)
+    imcv = cv2.imread('image.jpg', cv2.IMREAD_UNCHANGED)
 
     unwrapper = LabelUnwrapper(src_image=imcv, percent_points=points)
 
@@ -407,4 +407,4 @@ if __name__ == '__main__':
     # unwrapper.draw_mesh()
 
     cv2.imwrite("image_with_mask.png", imcv)
-    cv2.imwrite("unwrapped3.jpg", dst_image)
+    cv2.imwrite("unwrapped.jpg", dst_image)

@@ -1,5 +1,5 @@
 import cv2 
-image_paths=['unwrapped0.jpg','unwrapped3.jpg'] 
+image_paths=['image1.jpg','image2.jpg'] 
 # initialized a list of images 
 imgs = [] 
   
