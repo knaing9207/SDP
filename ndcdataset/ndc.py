@@ -10,12 +10,22 @@ filename = "product.csv"
 dataset = pd.read_csv(filename)
 
 queries = ['Tylneol', 'MOUTH EVERYO', 'CHRISTOPHER HO', 'ATORVASTATIN', 'TAKE1TABLETE', '0349518-178', 'N.M.D.RPi Hat', 'Y30', 'Walgreeks', 'Mtouirot', '(413)527-0777', '2024-03-09 15:32 (EST'] 
+dosage = '10'
+unit = 'Mg'
 
 threshold = 85
 
-med_list = []
+matched_list = []
+
 for query in queries:
   extract = process.extractOne(query, dataset["PROPRIETARYNAME"], score_cutoff=threshold)
-  if extract:
-    med_list.append(extract[0])
-print(med_list)
+  if extract is None:
+    pass
+  else:
+    # print(dataset.iloc[extract[2]])
+    # print(dataset.iloc[extract[2]]["ACTIVE_NUMERATOR_STRENGTH"])
+    if str.upper(dosage) in str.upper(dataset.iloc[extract[2]]["ACTIVE_NUMERATOR_STRENGTH"]):
+      if str.upper(unit) in str.upper(dataset.iloc[extract[2]]["ACTIVE_INGRED_UNIT"]):
+        matched_list.append(extract[0])
+  
+print(matched_list)

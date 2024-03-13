@@ -1,5 +1,6 @@
 import cv2 
-image_paths=['image1.jpg','image2.jpg'] 
+# image_paths=['Image Processing/image1.jpg','Image Processing/image2.jpg', 'Image Processing/image3.jpg'] 
+image_paths=['Image Processing/Picture1.jpg','Image Processing/Picture2.jpg', 'Image Processing/Picture3.jpg'] 
 # initialized a list of images 
 imgs = [] 
   
@@ -12,9 +13,9 @@ for i in range(len(image_paths)):
     # and due to this the resultant image won't fit the screen 
     # scaling down the images  
 # showing the original pictures 
-# cv2.imshow('image1',imgs[0]) 
-# cv2.imshow('image2',imgs[1]) 
-# cv2.imshow('image3',imgs[2]) 
+# cv2.imshow('1',imgs[0]) 
+# cv2.imshow('2',imgs[1]) 
+# cv2.imshow('3',imgs[2]) 
   
 stitchy=cv2.Stitcher.create() 
 (dummy,output)=stitchy.stitch(imgs) 
@@ -28,7 +29,7 @@ else:
     print('Your Panorama is ready!!!') 
   
 # final output 
-cv2.imshow('final result',output) 
-cv2.imwrite("stitched_image.jpg", output)
+# cv2.imshow('final result',output) 
+cv2.imwrite('Image Processing/Panorama.jpg', output)
   
 cv2.waitKey(0)
