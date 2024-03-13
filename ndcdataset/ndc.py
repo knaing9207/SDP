@@ -22,8 +22,6 @@ for query in queries:
   if extract is None:
     pass
   else:
-    # print(dataset.iloc[extract[2]])
-    # print(dataset.iloc[extract[2]]["ACTIVE_NUMERATOR_STRENGTH"])
     if str.upper(dosage) in str.upper(dataset.iloc[extract[2]]["ACTIVE_NUMERATOR_STRENGTH"]):
       if str.upper(unit) in str.upper(dataset.iloc[extract[2]]["ACTIVE_INGRED_UNIT"]):
         matched_list.append(extract[0])
