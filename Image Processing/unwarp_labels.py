@@ -124,7 +124,7 @@ class LabelUnwrapper(object):
         if not len(self.points) == 6:
             raise ValueError("Points should be an array of 6 elements")
 
-    def unwrap(self, interpolate=False):
+    def unwrap(self, interpolate=True):
         source_map = self.calc_source_map()
         if interpolate:
             self.unwrap_label_interpolation(source_map)
@@ -377,12 +377,12 @@ class LabelUnwrapper(object):
 
 
 if __name__ == '__main__':
-    shape = {"tag": "label", "shape": [{"x": 0.41, "y": 0.39}, #top left
-                                       {"x": 0.5, "y": 0.38}, #top middle
-                                       {"x": 0.64, "y": 0.39}, #top right
-                                       {"x": 0.64, "y": 0.76}, #bottom right
-                                       {"x": 0.5, "y": 0.79}, #bottom middle
-                                       {"x": 0.41, "y": 0.77}]} #bottom left
+    shape = {"tag": "label", "shape": [{"x": 0.1, "y": 0.12}, #top left
+                                       {"x": 0.5, "y": 0.08}, #top middle
+                                       {"x": 0.88, "y": 0.12}, #top right
+                                       {"x": 0.86, "y": 0.86}, #bottom right
+                                       {"x": 0.5, "y": 0.93}, #bottom middle
+                                       {"x": 0.1, "y": 0.86}]} #bottom left
 
 # [{"x": 0.41, "y": 0.39}, #top left
 #   {"x": 0.5, "y": 0.38}, #top middle
@@ -396,7 +396,7 @@ if __name__ == '__main__':
     for point in shape['shape']:
         points.append([point['x'], point['y']])
 
-    imcv = cv2.imread('image.jpg', cv2.IMREAD_UNCHANGED)
+    imcv = cv2.imread('Image Processing/cropped_image.jpg', cv2.IMREAD_UNCHANGED)
 
     unwrapper = LabelUnwrapper(src_image=imcv, percent_points=points)
 
@@ -406,5 +406,5 @@ if __name__ == '__main__':
 
     # unwrapper.draw_mesh()
 
-    cv2.imwrite("image_with_mask.png", imcv)
-    cv2.imwrite("unwrapped.jpg", dst_image)
+    cv2.imwrite("Image Processing/image_with_mask.png", imcv)
+    cv2.imwrite("Image Processing/unwrapped.jpg", dst_image)
