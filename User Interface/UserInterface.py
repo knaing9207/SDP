@@ -40,6 +40,26 @@ class MedicationInformation:
         else:
             return f"Medication Name:  {self.name}\n             Dosage:  {self.dose}\n            Quantity:  {self.qty}\n   Expiration Date:  {self.expire}\n   Time 1: {self.timehour}:{self.timemin} {self.ampm}\n Time 2: {self.timehour2}:{self.timemin2} {self.ampm2}"
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'dose': self.dose,
+            'qty': self.qty,
+            'expire': self.expire,
+            'dpd': self.dpd,
+            'ppd': self.ppd,
+            'timehour': self.timehour,
+            'timemin': self.timemin,
+            'ampm': self.ampm,
+            'timehour2': self.timehour2,
+            'timemin2': self.timemin2,
+            'ampm2': self.ampm2
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(**data)
+
 class MedicationDispenser(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -50,6 +70,8 @@ class MedicationDispenser(QMainWindow):
         self.prescription4 = MedicationInformation()
         self.prescriptiontemp = MedicationInformation()
         self.addmed = None
+
+        self.load_prescriptions()  # Load prescriptions from file
 
         self.setWindowTitle("Medication Dispenser")
         self.setGeometry(0, 0, 800, 480)  # Set window dimensions
@@ -64,6 +86,33 @@ class MedicationDispenser(QMainWindow):
         # Initialize previous screen and button label variables
         self.previous_screen = None
         self.previous_button_label = None
+
+    def load_prescriptions(self):
+        try:
+            with open("prescriptions.txt", "r") as file:
+                data = file.read()
+                prescriptions_data = eval(data)
+                self.prescription1 = MedicationInformation.from_dict(prescriptions_data['prescription1'])
+                self.prescription2 = MedicationInformation.from_dict(prescriptions_data['prescription2'])
+                self.prescription3 = MedicationInformation.from_dict(prescriptions_data['prescription3'])
+                self.prescription4 = MedicationInformation.from_dict(prescriptions_data['prescription4'])
+        except FileNotFoundError:
+            print("Prescriptions file not found. Using default prescriptions.")
+        except Exception as e:
+            print("Error loading prescriptions:", e)
+
+    def save_prescriptions(self):
+        try:
+            with open("prescriptions.txt", "w") as file:
+                data = {
+                    'prescription1': self.prescription1.to_dict(),
+                    'prescription2': self.prescription2.to_dict(),
+                    'prescription3': self.prescription3.to_dict(),
+                    'prescription4': self.prescription4.to_dict()
+                }
+                file.write(str(data))
+        except Exception as e:
+            print("Error saving prescriptions:", e)
 
     def update_time(self):
         if self.current_screen == "main_menu":
@@ -147,6 +196,19 @@ class MedicationDispenser(QMainWindow):
                     self.prescription4.qty -= 1
                     time.sleep(1)
 
+    def delete_med(self, prescription):
+        for _ in range(prescription.qty):
+            if prescription == self.prescription1:
+                print("Dispensing Prescription 1")
+            elif prescription == self.prescription2:
+                print("Dispensing Prescription 2")
+            elif prescription == self.prescription3:
+                print("Dispensing Prescription 3")
+            elif prescription == self.prescription4:
+                print("Dispensing Prescription 4")
+            prescription.qty -= 1
+            time.sleep(30)
+
     # def setupGPIO(self):
     #     """Configures the GPIO pins for the Raspberry Pi."""
     #     GPIO.setmode(GPIO.BCM)  # Use Broadcom SOC channel numbers
@@ -222,9 +284,9 @@ class MedicationDispenser(QMainWindow):
             },
             "screen_9": {
                 0: "%s" % self.prescription1.name if self.prescription1.name != "Empty" else "%s 1" % self.prescription1.name,
-                1: "%s" % self.prescription2.name if self.prescription2.name != "Empty" else "%s 2" % self.prescription1.name,
-                5: "%s" % self.prescription3.name if self.prescription3.name != "Empty" else "%s 3" % self.prescription1.name,
-                6: "%s" % self.prescription4.name if self.prescription4.name != "Empty" else "%s 4" % self.prescription1.name,
+                1: "%s" % self.prescription2.name if self.prescription2.name != "Empty" else "%s 2" % self.prescription2.name,
+                5: "%s" % self.prescription3.name if self.prescription3.name != "Empty" else "%s 3" % self.prescription3.name,
+                6: "%s" % self.prescription4.name if self.prescription4.name != "Empty" else "%s 4" % self.prescription4.name,
                 23: "Home"
             },
             "screen_10": {
@@ -248,6 +310,13 @@ class MedicationDispenser(QMainWindow):
                 23: "Home"
             },
             "screen_16": {
+                23: "Home"
+            },
+            "screen_17": {
+                0: "%s" % self.prescription1.name if self.prescription1.name != "Empty" else None,
+                1: "%s" % self.prescription2.name if self.prescription2.name != "Empty" else None,
+                5: "%s" % self.prescription3.name if self.prescription3.name != "Empty" else None,
+                6: "%s" % self.prescription4.name if self.prescription4.name != "Empty" else None,
                 23: "Home"
             }
         }
@@ -344,6 +413,7 @@ class MedicationDispenser(QMainWindow):
                 row += 1
                 
         if screen == "main_menu":
+            self.save_prescriptions()
             self.time_label = QLabel()
             self.time_label.setStyleSheet("font-size: 80px; font-weight: bold; padding-top: 60px;")
             self.grid_layout.addWidget(self.time_label, 1, 0, 1, 2) 
@@ -403,6 +473,7 @@ class MedicationDispenser(QMainWindow):
         if screen == "screen_8":
             self.addmed = None
             self.prescriptiontemp = MedicationInformation()
+            self.save_prescriptions()
             textbox = QLabel("Pour Bottle")
             textbox.setAlignment(Qt.AlignCenter)
             textbox.setStyleSheet("font-size: 40px;")
@@ -463,7 +534,7 @@ class MedicationDispenser(QMainWindow):
 
         button_labels = []
         if screen == "main_menu":
-            button_labels = [("Add Med", "screen_1"), ("Med Info", "screen_9"), (None, None), (None, None), (None, None), (None, None), ("Delete Med", None), ("Sound", "screen_14")]
+            button_labels = [("Add Med", "screen_1"), ("Med Info", "screen_9"), (None, None), (None, None), (None, None), (None, None), ("Delete Med", "screen_17"), ("Sound", "screen_14")]
         elif screen == "screen_1":
             button_labels = [(None, None), (None, None), (None, None), (None, None), (None, None), (None, None), ("Home", "main_menu"), ("Take picture","screen_2")]
         elif screen == "screen_2":
@@ -499,6 +570,8 @@ class MedicationDispenser(QMainWindow):
             button_labels = [(None, None), (None, None), (None, None), (None, None), (None, None), (None, None), ("Home", "main_menu"), (None,None)]
         elif screen == "screen_16":
             button_labels = [(None, None), (None, None), (None, None), (None, None), (None, None), (None, None), ("Home", "main_menu"), (None,None)]
+        elif screen == "screen_17":
+            button_labels = [("%s" % self.prescription1.name if self.prescription1.name != "Empty" else None, "main_menu"), ("%s" % self.prescription3.name if self.prescription3.name != "Empty" else None, "main_menu"), ("%s" % self.prescription2.name if self.prescription2.name != "Empty" else None, "main_menu"), ("%s" % self.prescription4.name if self.prescription4.name != "Empty" else None, "main_menu"), (None, None), (None, None), ("Home", "main_menu"), (None,None)]
         return button_labels
 
     def clearLayout(self, layout):
@@ -809,6 +882,19 @@ class MedicationDispenser(QMainWindow):
                     self.prescription4.ampm2 = 'AM'
                 else:
                     pass
+        
+        if self.previous_screen == 'screen_17' and self.previous_button_label == '%s' % self.prescription1.name and self.current_screen == 'main_menu':
+            self.delete_med(self.prescription1)
+            self.prescription1 = MedicationInformation()
+        elif self.previous_screen == 'screen_17' and self.previous_button_label == '%s' % self.prescription2.name and self.current_screen == 'main_menu':
+            self.delete_med(self.prescription2)
+            self.prescription2 = MedicationInformation()
+        elif self.previous_screen == 'screen_17' and self.previous_button_label == '%s' % self.prescription3.name and self.current_screen == 'main_menu':
+            self.delete_med(self.prescription3)
+            self.prescription3 = MedicationInformation()
+        elif self.previous_screen == 'screen_17' and self.previous_button_label == '%s' % self.prescription4.name and self.current_screen == 'main_menu':
+            self.delete_med(self.prescription4)
+            self.prescription4 = MedicationInformation()
 
         # Update the screen
         self.updateScreen(screen)
