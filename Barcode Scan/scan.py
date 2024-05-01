@@ -41,5 +41,5 @@ def BarcodeReader(image):
  
 if __name__ == "__main__":
   # Take the image from user
-    image="image.jpg"
+    image="/Users/khantnaing/Documents/VSCode/SDP/Barcode Scan/image.jpg"
     BarcodeReader(image)
